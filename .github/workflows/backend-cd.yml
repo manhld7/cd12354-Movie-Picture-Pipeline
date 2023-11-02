@@ -108,8 +108,12 @@ jobs:
       needs: [build-job]
       runs-on: ubuntu-latest
 
-      steps:
+      defaults:
+        run:
+          working-directory: ./terraform
 
+      steps:
+          # Configure AWS credentials
           - name: Configure AWS credentials
             uses: aws-actions/configure-aws-credentials@v2
             with:
@@ -118,11 +122,29 @@ jobs:
               aws-session-token: ${{env.AWS_SESSION_TOKEN}}
               aws-region: us-east-1
 
+          # Setup Terraform
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v2
+    
+          - name: Terraform Initialize
+            run: terraform init
+    
+          - name: Terraform Validate
+            run: terraform validate 
+    
+          - name: Terraform Plan
+            run: terraform plan 
+            continue-on-error: true
+    
+          - name: Terraform Apply
+            if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+            run: terraform apply -auto-approve
+
           # Set up kubectl
           - name: Provision cluster
             uses: azure/setup-kubectl@v3
             with:
-              version: 'latest' # default is latest stable
+              version: 'latest'
             id: install
 
           # Update kube config
@@ -131,5 +153,9 @@ jobs:
 
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
-            run: kubectl apply -f deployment.yaml
+            run: kubectl apply -f starter/backend/k8s/
+
+          # Destroy Terraform
+          - name: Destroy Terraform
+            run: terraform plan -destroy
               
