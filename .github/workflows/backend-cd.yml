@@ -108,6 +108,7 @@ jobs:
               id: terraform-apply
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               run: terraform apply -auto-approve
+              continue-on-error: true
 
             - name: Check on failures
               if: steps.terraform-plan.outcome != 'success' || steps.terraform-apply.outcome != 'success'
