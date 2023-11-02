@@ -1,0 +1,71 @@
+name: Backend Continuous Integration
+
+on:
+    workflow_dispatch:
+    pull_request:
+        branches: 
+        - main
+
+env:
+    # Set Python Version
+    PYTHON_VERSION: '3.10'
+
+jobs:
+    lint-job:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout code
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Set up Python
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{env.PYTHON_VERSION}}
+
+            # Install the dependencies
+            - run: cd starter/backend && pipenv install
+
+            # Run the linter
+            - run: cd starter/backend && pipenv run lint
+
+    test-job:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout code
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Set up Python
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{env.PYTHON_VERSION}}
+
+            # Install the dependencies
+            - run: cd starter/backend && pipenv install
+
+            # Run the linter
+            - run: cd starter/backend && pipenv run test
+
+    build-job:
+        # Only run after the first 2 succeed
+        needs: [lint-job, test-job]
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout code
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Set up Python
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{env.PYTHON_VERSION}}
+
+            # Install the dependencies
+            - run: cd starter/backend && pipenv install
