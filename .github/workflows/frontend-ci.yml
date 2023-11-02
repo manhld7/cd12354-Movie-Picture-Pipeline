@@ -33,10 +33,12 @@ jobs:
                 path: ~/.npm
 
             # Install the dependencies
-            - run: cd starter/frontend && npm ci
+            - name: Install the dependencies
+              run: cd starter/frontend && npm ci
 
             # Run the linter
-            - run: cd starter/frontend && npm run lint
+            - name: Run the linter
+              run: cd starter/frontend && npm run lint
 
     test-job:
         runs-on: ubuntu-latest

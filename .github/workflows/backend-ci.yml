@@ -26,10 +26,15 @@ jobs:
                 python-version: ${{env.PYTHON_VERSION}}
 
             # Install the dependencies
-            - run: cd starter/backend && pipenv install
+            - name: Install the dependencies
+              run: |
+                cd starter/backend
+                pip install pipenv --user
+                pipenv install
 
             # Run the linter
-            - run: cd starter/backend && pipenv run lint
+            - name: Run the linter
+              run: cd starter/backend && pipenv run lint
 
     test-job:
         runs-on: ubuntu-latest
@@ -46,10 +51,15 @@ jobs:
                 python-version: ${{env.PYTHON_VERSION}}
 
             # Install the dependencies
-            - run: cd starter/backend && pipenv install
+            - name: Install the dependencies
+              run: |
+                cd starter/backend
+                pip install pipenv --user
+                pipenv install
 
             # Run the linter
-            - run: cd starter/backend && pipenv run test
+            - name: Run the linter
+              run: cd starter/backend && pipenv run test
 
     build-job:
         # Only run after the first 2 succeed
@@ -68,4 +78,5 @@ jobs:
                 python-version: ${{env.PYTHON_VERSION}}
 
             # Install the dependencies
-            - run: cd starter/backend && pipenv install
+            - name: Install the dependencies
+              run: cd starter/backend && pipenv install
