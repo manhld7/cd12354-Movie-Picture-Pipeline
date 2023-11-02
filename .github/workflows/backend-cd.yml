@@ -68,7 +68,7 @@ jobs:
 
     build-job:
         # Only run after the first 2 successed
-        needs: [test-job]
+        needs: [lint-job, test-job]
         runs-on: ubuntu-latest
 
         steps:

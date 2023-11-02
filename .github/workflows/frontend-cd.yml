@@ -30,6 +30,17 @@ jobs:
               with:
                 node-version: ${{env.NODE_VERSION}}
 
+            # Restore cache
+            - name: Restore cache
+              uses: actions/cache@v3
+              with:
+                key: npm-cache-${{ hashFiles('**/package-lock.json') }}
+                path: ~/.npm
+
+            # Install the dependencies
+            - name: Install the dependencies
+              run: cd starter/frontend && npm ci
+
             # Run the tests
             - name: Run the tests
               run: cd starter/frontend && npm test
