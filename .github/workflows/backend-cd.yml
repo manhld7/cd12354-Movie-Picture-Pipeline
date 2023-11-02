@@ -182,5 +182,5 @@ jobs:
 
           # Destroy Terraform
           - name: Destroy Terraform
-            run: terraform plan -destroy
+            run: terraform plan -destroy 
               
