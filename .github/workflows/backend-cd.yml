@@ -100,12 +100,20 @@ jobs:
               run: terraform validate 
       
             - name: Terraform Plan
+              id: terraform-plan
               run: terraform plan 
               continue-on-error: true
       
             - name: Terraform Apply
+              id: terraform-apply
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               run: terraform apply -auto-approve
+
+            - name: Check on failures
+              if: steps.terraform-plan.outcome != 'success' || steps.terraform-apply.outcome != 'success'
+              run: |
+                terraform plan -destroy 
+                exit 1
 
             # Login to Amazon ECR
             - name: Login to Amazon ECR
@@ -126,8 +134,8 @@ jobs:
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
             # Destroy Terraform
-            - name: Destroy Terraform
-              run: terraform plan -destroy
+            # - name: Destroy Terraform
+            #   run: terraform plan -destroy
 
     deploy-job:
       needs: [build-job]
@@ -158,12 +166,21 @@ jobs:
             run: terraform validate 
     
           - name: Terraform Plan
+            id: terraform-plan
             run: terraform plan 
             continue-on-error: true
     
           - name: Terraform Apply
+            id: terraform-apply
             if: github.ref == 'refs/heads/main' && github.event_name == 'push'
             run: terraform apply -auto-approve
+            continue-on-error: true
+
+          - name: Check on failures
+            if: steps.terraform-plan.outcome != 'success' || steps.terraform-apply.outcome != 'success'
+            run: |
+              terraform plan -destroy 
+              exit 1
 
           # Set up kubectl
           - name: Provision cluster
@@ -181,6 +198,6 @@ jobs:
             run: kubectl apply -f ../../starter/backend/k8s/
 
           # Destroy Terraform
-          - name: Destroy Terraform
-            run: terraform plan -destroy 
+          # - name: Destroy Terraform
+          #   run: terraform plan -destroy 
               
