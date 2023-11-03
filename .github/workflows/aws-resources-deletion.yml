@@ -37,4 +37,4 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Destroy
-        run:  terraform plan -destroy
+        run:  terraform destroy
