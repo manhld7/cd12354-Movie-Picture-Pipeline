@@ -107,6 +107,11 @@ jobs:
       runs-on: ubuntu-latest
 
       steps:
+
+        # Checkout code
+          - name: Checkout code
+            uses: actions/checkout@v3
+
           # Configure AWS credentials
           - name: Configure AWS credentials
             uses: aws-actions/configure-aws-credentials@v2
@@ -129,16 +134,5 @@ jobs:
 
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
-            run: |
-              ls -la
-              pwd
-              echo "============================================================================================"
-              cd ..
-              ls -la
-              pwd
-              echo "============================================================================================"
-              cd ..
-              ls -la
-              pwd
-              echo "============================================================================================"
+            run: 
               kubectl apply -f starter/backend/k8s/
