@@ -13,7 +13,6 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_SESSION_TOKEN: ${{secrets.AWS_SESSION_TOKEN}}
   AWS_REGION: us-east-1
-  REACT_APP_MOVIE_API_URL: https://my-movie-api.example.com
   ECR_REPOSITORY: frontend
 
 jobs:
@@ -100,14 +99,28 @@ jobs:
               uses: aws-actions/amazon-ecr-login@v2
               with:
                 mask-password: 'false'
+
+            # Set up kubectl
+            - name: Provision cluster
+              uses: azure/setup-kubectl@v3
+              with:
+                version: 'latest'
+              id: install
+
+            # Update kube config
+            - name: Update kube config
+              run: aws eks update-kubeconfig --name cluster
         
             # Build, tag, and push image to Amazon ECR
             - name: Build, tag, and push image to Amazon ECR
               env:
                 ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
                 IMAGE_TAG: ${{ github.sha }}
+                BACKEND_PORT: 5000
               run: |
-                docker build --build-arg REACT_APP_MOVIE_API_URL=${{env.REACT_APP_MOVIE_API_URL}} -t $ECR_REGISTRY/${{env.ECR_REPOSITORY}}:$IMAGE_TAG starter/frontend/
+                export BACKEND_EXTERNAL_IP=$(kubectl get svc backend -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}{.status.loadBalancer.ingress[0].ip}')
+                echo $BACKEND_EXTERNAL_IP
+                docker build --build-arg REACT_APP_MOVIE_API_URL=http://$BACKEND_EXTERNAL_IP:$BACKEND_PORT -t $ECR_REGISTRY/${{env.ECR_REPOSITORY}}:$IMAGE_TAG starter/frontend/
                 docker push $ECR_REGISTRY/${{env.ECR_REPOSITORY}}:$IMAGE_TAG
 
     deploy-job:
