@@ -99,7 +99,7 @@ jobs:
                 ECR_REPOSITORY: movie-picture-backend
                 IMAGE_TAG: ${{ github.sha }}
               run: |
-                cd ../../starter/backend
+                cd starter/backend
                 docker build --build-arg REACT_APP_MOVIE_API_URL=${{env.REACT_APP_MOVIE_API_URL}} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
@@ -130,4 +130,4 @@ jobs:
 
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
-            run: kubectl apply -f ../../starter/backend/k8s/
+            run: kubectl apply -f starter/backend/k8s/
