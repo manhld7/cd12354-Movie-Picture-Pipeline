@@ -1,4 +1,4 @@
-name: 'AWS Resources Deployment'
+name: 'AWS Resources Deletion'
 on:
   workflow_dispatch:
 
