@@ -16,94 +16,94 @@ env:
   REACT_APP_MOVIE_API_URL: https://my-movie-api.example.com
 
 jobs:
-    # lint-job:
-    #     runs-on: ubuntu-latest
+    lint-job:
+        runs-on: ubuntu-latest
 
-    #     steps:
-    #         # Checkout code
-    #         - name: Checkout code
-    #           uses: actions/checkout@v3
+        steps:
+            # Checkout code
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-    #         # Set up Python
-    #         - name: Set up Python
-    #           uses: actions/setup-python@v4
-    #           with:
-    #             python-version: ${{env.PYTHON_VERSION}}
+            # Set up Python
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{env.PYTHON_VERSION}}
 
-    #         # Install the dependencies
-    #         - name: Install the dependencies
-    #           run: |
-    #             cd starter/backend
-    #             pip install pipenv --user
-    #             pipenv install
+            # Install the dependencies
+            - name: Install the dependencies
+              run: |
+                cd starter/backend
+                pip install pipenv --user
+                pipenv install
 
-    #         # Run the linter
-    #         - name: Run the linter
-    #           run: cd starter/backend && pipenv run test
+            # Run the linter
+            - name: Run the linter
+              run: cd starter/backend && pipenv run test
 
-    # test-job:
-    #     runs-on: ubuntu-latest
+    test-job:
+        runs-on: ubuntu-latest
 
-    #     steps:
-    #         # Checkout code
-    #         - name: Checkout code
-    #           uses: actions/checkout@v3
+        steps:
+            # Checkout code
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-    #         # Set up Python
-    #         - name: Set up Python
-    #           uses: actions/setup-python@v4
-    #           with:
-    #             python-version: ${{env.PYTHON_VERSION}}
+            # Set up Python
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{env.PYTHON_VERSION}}
 
-    #         # Install the dependencies
-    #         - name: Install the dependencies
-    #           run: |
-    #             cd starter/backend
-    #             pip install pipenv --user
-    #             pipenv install
+            # Install the dependencies
+            - name: Install the dependencies
+              run: |
+                cd starter/backend
+                pip install pipenv --user
+                pipenv install
 
-    #         # Run the linter
-    #         - name: Run the linter
-    #           run: cd starter/backend && pipenv run test
+            # Run the linter
+            - name: Run the linter
+              run: cd starter/backend && pipenv run test
 
-    # build-job:
-    #     # Only run after the first 2 successed
-    #     needs: [lint-job, test-job]
-    #     runs-on: ubuntu-latest
+    build-job:
+        # Only run after the first 2 successed
+        needs: [lint-job, test-job]
+        runs-on: ubuntu-latest
 
-    #     steps:
-    #         # Checkout code
-    #         - name: Checkout code
-    #           uses: actions/checkout@v3
+        steps:
+            # Checkout code
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-    #         # Configure AWS credentials
-    #         - name: Configure AWS credentials
-    #           uses: aws-actions/configure-aws-credentials@v2
-    #           with:
-    #             aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-    #             aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-    #             aws-session-token: ${{env.AWS_SESSION_TOKEN}}
-    #             aws-region: us-east-1
+            # Configure AWS credentials
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+                aws-session-token: ${{env.AWS_SESSION_TOKEN}}
+                aws-region: us-east-1
 
-    #         # Login to Amazon ECR
-    #         - name: Login to Amazon ECR
-    #           id: login-ecr
-    #           uses: aws-actions/amazon-ecr-login@v2
-    #           with:
-    #             mask-password: 'false'
+            # Login to Amazon ECR
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+              with:
+                mask-password: 'false'
         
-    #         # Build, tag, and push image to Amazon ECR
-    #         - name: Build, tag, and push image to Amazon ECR
-    #           env:
-    #             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #             ECR_REPOSITORY: backend
-    #             IMAGE_TAG: ${{ github.sha }}
-    #           run: |
-    #             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG starter/backend/
-    #             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            # Build, tag, and push image to Amazon ECR
+            - name: Build, tag, and push image to Amazon ECR
+              env:
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                ECR_REPOSITORY: backend
+                IMAGE_TAG: ${{ github.sha }}
+              run: |
+                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG starter/backend/
+                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     deploy-job:
-      # needs: [build-job]
+      needs: [build-job]
       runs-on: ubuntu-latest
 
       steps:
