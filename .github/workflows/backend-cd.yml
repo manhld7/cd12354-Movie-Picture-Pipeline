@@ -131,4 +131,8 @@ jobs:
           - name: Deploy the application using kubectl
             run: |
               ls -la
+              cd ..
+              ls -la
+              cd ..
+              ls -la
               kubectl apply -f starter/backend/k8s/
