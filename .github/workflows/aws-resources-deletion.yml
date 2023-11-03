@@ -26,12 +26,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform Initialize
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate 
-
       - name: Terraform Plan
         run: terraform plan -destroy
         continue-on-error: true
