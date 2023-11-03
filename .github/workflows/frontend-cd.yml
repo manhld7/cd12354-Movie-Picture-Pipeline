@@ -160,5 +160,5 @@ jobs:
             run: |
               cd starter/frontend/k8s
               kustomize build
-              kubectl apply -k -
+              kubectl apply -k
               
