@@ -146,8 +146,8 @@ jobs:
           - name: Update kube config
             run: aws eks update-kubeconfig --name cluster
 
-          # Update image for kubectl deployment
-          - name: Update image for kubectl deployment
+          # Update image for deployment
+          - name: Update image for deployment
             env:
               ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
               IMAGE_TAG: ${{ github.sha }}
@@ -160,5 +160,5 @@ jobs:
             run: |
               cd starter/frontend/k8s
               kustomize build
-              kubectl apply -k
+              kubectl apply -k .
               
