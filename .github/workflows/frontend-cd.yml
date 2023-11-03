@@ -2,9 +2,9 @@ name: Frontend Continuous Deployment
 
 on:
     workflow_dispatch:
-    push:
-        branches: 
-        - main
+    # push:
+    #     branches: 
+    #     - main
 
 env:
   # Set Node.js Version
@@ -110,5 +110,5 @@ jobs:
 
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
-            run: kubectl apply -f deployment.yaml
+            run: kubectl apply -f starter/frontend/k8s/
               
