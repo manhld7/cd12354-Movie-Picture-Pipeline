@@ -106,7 +106,7 @@ jobs:
 
           # Update kube config
           - name: Update kube config
-            run: aws eks update-kubeconfig --name devops-cluster
+            run: aws eks update-kubeconfig --name cluster
 
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
