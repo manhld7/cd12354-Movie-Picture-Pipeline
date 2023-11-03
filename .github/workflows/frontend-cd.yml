@@ -17,6 +17,35 @@ env:
   ECR_REPOSITORY: frontend
 
 jobs:
+  lint-job:
+    runs-on: ubuntu-latest
+
+    steps:
+        # Checkout code
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        # Set up Node.js
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{env.NODE_VERSION}}
+
+        # Restore cache
+        - name: Restore cache
+          uses: actions/cache@v3
+          with:
+            key: npm-cache-${{ hashFiles('**/package-lock.json') }}
+            path: ~/.npm
+
+        # Install the dependencies
+        - name: Install the dependencies
+          run: cd starter/frontend && npm ci
+
+        # Run the linter
+        - name: Run the linter
+          run: cd starter/frontend && npm run lint
+
     test-job:
         runs-on: ubuntu-latest
 
@@ -122,11 +151,14 @@ jobs:
             env:
               ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
               IMAGE_TAG: ${{ github.sha }}
-            run: kustomize edit set image frontend=$ECR_REGISTRY/${{env.ECR_REPOSITORY}}:$IMAGE_TAG
+            run: |
+              cd starter/frontend/k8s
+              kustomize edit set image frontend=$ECR_REGISTRY/${{env.ECR_REPOSITORY}}:$IMAGE_TAG
             
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
             run: |
-              kustomize build starter/frontend/k8s/deployment.yaml
-              kubectl apply -k starter/frontend/k8s/
+              cd starter/frontend/k8s
+              kustomize build
+              kubectl apply -k -
               

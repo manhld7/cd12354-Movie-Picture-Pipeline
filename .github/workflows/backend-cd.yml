@@ -134,5 +134,4 @@ jobs:
 
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
-            run: 
-              kubectl apply -k starter/backend/k8s/
+            run: kubectl apply -k starter/backend/k8s/
