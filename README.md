@@ -11,6 +11,11 @@ You'll find 2 folders, one named `frontend` and one named `backend`, where each 
 
 ## Deliverables
 
+### Note:
+Before running ci/cd for the backend and frontend, you must run the `AWS Resources Deployment` workflow to create the necessary AWS resources. See [aws-resources-deployment.yml](.github/workflows/aws-resources-deployment.yml).
+
+Once completed, run the `AWS Resources Deletion` workflow to delete all deployed resources to avoid costs. See [aws-resources-deletion.yml](.github/workflows/aws-resources-deletion.yml).
+
 ### Frontend
 
 1. A Continuous Integration workflow that:
