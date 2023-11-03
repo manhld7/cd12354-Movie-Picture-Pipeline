@@ -17,34 +17,34 @@ env:
   ECR_REPOSITORY: frontend
 
 jobs:
-  lint-job:
-    runs-on: ubuntu-latest
+    lint-job:
+      runs-on: ubuntu-latest
 
-    steps:
-        # Checkout code
-        - name: Checkout code
-          uses: actions/checkout@v3
+      steps:
+          # Checkout code
+          - name: Checkout code
+            uses: actions/checkout@v3
 
-        # Set up Node.js
-        - name: Set up Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{env.NODE_VERSION}}
+          # Set up Node.js
+          - name: Set up Node.js
+            uses: actions/setup-node@v3
+            with:
+              node-version: ${{env.NODE_VERSION}}
 
-        # Restore cache
-        - name: Restore cache
-          uses: actions/cache@v3
-          with:
-            key: npm-cache-${{ hashFiles('**/package-lock.json') }}
-            path: ~/.npm
+          # Restore cache
+          - name: Restore cache
+            uses: actions/cache@v3
+            with:
+              key: npm-cache-${{ hashFiles('**/package-lock.json') }}
+              path: ~/.npm
 
-        # Install the dependencies
-        - name: Install the dependencies
-          run: cd starter/frontend && npm ci
+          # Install the dependencies
+          - name: Install the dependencies
+            run: cd starter/frontend && npm ci
 
-        # Run the linter
-        - name: Run the linter
-          run: cd starter/frontend && npm run lint
+          # Run the linter
+          - name: Run the linter
+            run: cd starter/frontend && npm run lint
 
     test-job:
         runs-on: ubuntu-latest
@@ -77,7 +77,7 @@ jobs:
 
     build-job:
         # Only run after the first 2 successed
-        needs: [test-job]
+        needs: [lint-job, test-job]
         runs-on: ubuntu-latest
 
         steps:
