@@ -3,9 +3,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform:
+  create-aws-resources:
     name: 'Terraform'
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: setup/terraform
 
     steps:
       - name: Checkout

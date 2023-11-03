@@ -71,10 +71,6 @@ jobs:
         needs: [lint-job, test-job]
         runs-on: ubuntu-latest
 
-        defaults:
-          run:
-            working-directory: setup/terraform
-
         steps:
             # Checkout code
             - name: Checkout code
@@ -110,10 +106,6 @@ jobs:
     deploy-job:
       needs: [build-job]
       runs-on: ubuntu-latest
-
-      defaults:
-        run:
-          working-directory: setup/terraform
 
       steps:
           # Configure AWS credentials
