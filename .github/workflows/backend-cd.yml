@@ -130,15 +130,15 @@ jobs:
           # Deploy the application using kubectl
           - name: Deploy the application using kubectl
             run: |
-              ls-la
+              ls -la
               pwd
               echo "============================================================================================"
               cd ..
-              ls-la
+              ls -la
               pwd
               echo "============================================================================================"
               cd ..
-              ls-la
+              ls -la
               pwd
               echo "============================================================================================"
               kubectl apply -f starter/backend/k8s/
