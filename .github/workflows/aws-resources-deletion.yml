@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  delete-aws-resources:
-    name: 'Terraform'
+  Terraform:
+    name: 'Delete AWS Resources'
     runs-on: ubuntu-latest
 
     defaults:

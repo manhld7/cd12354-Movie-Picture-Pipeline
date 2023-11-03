@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  create-aws-resources:
-    name: 'Terraform'
+  Terraform:
+    name: 'Create AWS Resources'
     runs-on: ubuntu-latest
 
     defaults:
